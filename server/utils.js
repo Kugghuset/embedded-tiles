@@ -16,18 +16,14 @@ import Promise from 'bluebird';
  * @return {Promise} -> {Any}
  */
 const _request = (method, url, content, options = {}, assumeJson = true) => new Promise((resolve, reject) => {
-  // Make get get request with the options object as base.
-  
-  let _headers = _.assign({}, {
-      'Connection': 'keep-alive'
-    }, options.headers);
-  
   request(_.assign({}, options, {
     method: method.toLowerCase(),
     uri: url,
     body: content,
     encoding: options.encoding || null,
-    headers: _headers
+    headers: _.assign({}, {
+        'Connection': 'keep-alive'
+      }, options.headers)
   }), (err, res, body) => {
     // Reject if an error occurred.
     if (err) return reject(err);
