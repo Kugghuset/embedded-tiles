@@ -2,19 +2,19 @@
 
 import { AuthenticationContext } from 'adal-node';
 import Promise from 'bluebird';
-import _ from 'lodash';
 import moment from 'moment';
 
 import config from '../config';
 
+// Set up shorthands from config file
 const _clientId = config.azure_client_id;
 const _username = config.azure_client_username;
 const _password = config.azure_client_password;
 
+// Set up Power BI and Azure shorthands
 const _authorityUrl = 'https://login.windows.net/' + config.azure_domain;
-const _resource = 'https://analysis.windows.net/powerbi/api';
-
 const _context =  new AuthenticationContext(_authorityUrl)
+const _resource = 'https://analysis.windows.net/powerbi/api';
 
 /**
  * Contains the token and refreshToken from Azure.
