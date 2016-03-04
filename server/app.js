@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+import azure from './services/azure';
 
 import routes from './routes';
 routes(app);

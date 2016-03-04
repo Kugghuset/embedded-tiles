@@ -18,5 +18,4 @@ $(window).ready(() => {
   
   $('#mount-point').replaceWith(_tile);
 
-
 }, $);
