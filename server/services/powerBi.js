@@ -99,6 +99,9 @@ export const getTiles = (token, _dashboard, __tiles) => new Promise((resolve, re
       return dashboard.id === _dashboard || dashboard.displayName === _dashboard;
     }) || {}).id;
     
+    // Assign it to the first dashboard's id if _dashboardId is undefined
+    if (!_dashboardId) { _dashboardId = (dashboards[0] || {}).id; }
+    
     return listTiles(token, _dashboardId);
   })
   .then((tiles) => {
@@ -124,5 +127,5 @@ export const getTiles = (token, _dashboard, __tiles) => new Promise((resolve, re
 export default {
   listDashboards: listDashboards,
   listTiles: listTiles,
-  getEmbedUrlsTiles: getTiles
+  getTiles: getTiles
 }

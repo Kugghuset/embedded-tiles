@@ -10,23 +10,21 @@ import { ajax } from 'jquery';
  * @param {Object} options Optional options object
  * @return {Promise} -> {Any}
  */
-export const get = (url, options) => {
-  return new Promise((resolve, reject) => {
-    ajax({
-      url: url,
-      type: 'GET',
-      success: resolve,
-      error: (err) => {
-        reject(new Error(
-          !!err.responseBody
-            ? err.responseBody
-            : err.responseText
-          ));
-      },
-    });
+export const get = (url, options) => new Promise((resolve, reject) => {
+  ajax({
+    url: url,
+    type: 'GET',
+    success: resolve,
+    error: (err) => {
+      reject(new Error(
+        !!err.responseBody
+          ? err.responseBody
+          : err.responseText
+        ));
+    },
   });
+});
 
-};
 
 
 /**

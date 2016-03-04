@@ -13,9 +13,21 @@ let _width = 600;
 
 $(window).ready(() => {
   
-  const _embedUrl = utils.createEmbedUrl('http://www.w3schools.com?something=1', _height, _width);
-  const _tile = utils.setupIframe(_embedUrl, _height, _width);
+  utils.get('/api/tiles')
+  .then((_tiles) => {
+    let tiles = _tiles.map((tile) => {
+      let _embedUrl = utils.createEmbedUrl(tile.embedUrl, _height, _width);
+      return utils.setupIframe(_embedUrl, _height, _width);
+    });
+    
+    // TODO: Append and init the tiles
+    // https://powerbi.microsoft.com/en-us/documentation/powerbi-developer-integrate-a-power-bi-tile-or-report/
+    
+  })
+  .catch((err) => {
+    console.log(err);
+  });
   
-  $('#mount-point').replaceWith(_tile);
-
+  
+  
 }, $);

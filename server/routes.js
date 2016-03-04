@@ -10,4 +10,5 @@ export default (app) => {
   app.use(express.static(root + '/public'));
   
   // Back end stuff
+  app.use('/api/tiles', require('./api/tiles').default);
 }
