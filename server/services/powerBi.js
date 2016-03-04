@@ -11,7 +11,6 @@ import utils from '../utils';
 
 const _baseUrl = 'https://api.powerbi.com/v1.0/myorg';
 const _baseUrlBeta = 'https://api.powerbi.com/beta/myorg';
-let _token;
 
 /**
  * Returns a promise of the token from Azure.
@@ -84,7 +83,46 @@ export const listTiles = (token, dashboardId) => new Promise((resolve, reject) =
   
 });
 
+/**
+ * @param {String} token The Azure token. Optional, if undefined, will call azure.getToken().
+ * @param {String} dashboard Either the name or id of the desired dashboard
+ * @param {String|Array} __tiles An array of either names or ids of the tiles to view. Can also be a single string
+ */
+export const getTiles = (token, _dashboard, __tiles) => new Promise((resolve, rejecet) => {
+  
+  // First list all dashboards
+  listDashboards(token)
+  .then((dashboards) => {
+  
+    // Find the dashboardId of the dashboard matching *_dashboard* (either by id or displayName).
+    let _dashboardId = (_.find(dashboards, (dashboard) => {
+      return dashboard.id === _dashboard || dashboard.displayName === _dashboard;
+    }) || {}).id;
+    
+    return listTiles(token, _dashboardId);
+  })
+  .then((tiles) => {
+    let _tiles = _.isArray(__tiles)
+      ? __tiles
+      : [ __tiles ];
+    
+    // Set _tiles to undefined if there are no __tiles.
+    if (!__tiles || !_tiles.length) { _tiles = undefined; }
+    
+    resolve(
+      _.chain(tiles)
+      // If _tiles is undefined, filter out none, otherwise filter out all non-matching tiles
+      .filter((tile) => !_tiles || !!~_tiles.indexOf(tile.id) || !!~_tiles.indexOf(tile.title))
+      .map((tile) => ({ title: tile.title, embedUrl: tile.embedUrl }))
+      .value()
+    );
+    
+  })
+  .catch((err) => console.log(err));
+});
+
 export default {
   listDashboards: listDashboards,
-  listTiles: listTiles
+  listTiles: listTiles,
+  getEmbedUrlsTiles: getTiles
 }
