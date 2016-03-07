@@ -169,10 +169,25 @@ export const getToken = (__method = 'local') => {
     
     // Reject the error, as there's no fallback.
     return new Promise((resolve, reject) => reject(err));
-  })
-  
+  });
 };
 
+/**
+ * Returns a promise of the *_auth* object ({ token: String, refreshToken: String, tokenExpiresOn: Date })
+ * by piggy backing on fall back system used in getToken(...).
+ * 
+ * @param {String} _method The primary method of getting the token
+ * @return {Promise} -> {Object}
+ */
+export const getTokenData = (_method = 'local') => new Promise((resolve, reject) => {
+  // Piggy back on the logic used in getToken(...),
+  // but resolve the whole _auth object instead.
+  getToken(_method)
+  .then((token) => resolve(_auth))
+  .catch(reject);
+})
+
 export default {
-  getToken: getToken
+  getToken: getToken,
+  getTokenData: getTokenData
 }

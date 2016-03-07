@@ -11,4 +11,5 @@ export default (app) => {
   
   // Back end stuff
   app.use('/api/tiles', require('./api/tiles').default);
+  app.use('/api/token', require('./api/token').default);
 }

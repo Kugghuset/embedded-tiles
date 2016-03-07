@@ -48,7 +48,7 @@ const _request = (method, url, content, options = {}, assumeJson = true) => new 
       _.isError(parsed)
           ? _body
           : parsed
-    );
+      );
   });
 });
 

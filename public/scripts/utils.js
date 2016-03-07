@@ -25,7 +25,17 @@ export const get = (url, options) => new Promise((resolve, reject) => {
   });
 });
 
-
+/**
+ * Runs all *promises* and resolves when all are finished.
+ * 
+ * @param {Array} promises Array of promises
+ * @return {Promise}
+ */
+export const settlePromises = (promises) => new Promise((resolve, reject) => {
+  Promise.all(promises.map((promise) => promise.reflect()))
+  .then((vals) => resolve(vals.map((val) => val.isRejected() ? val.reason() : val.value())))
+  .catch(reject);
+});
 
 /**
  * Creates the embed url for the Power BI tile and returns it.
@@ -56,8 +66,30 @@ export const setupIframe = (embedUrl, height, width) => {
     .attr('width', width);
 };
 
+/**
+ * Returns the contentWindow of an iframe.
+ * 
+ * @param {Element|JQuery} _iframe Either a jQuery object or Element
+ * @return {Object}
+ */
+export const iframeContentWindow = (_iframe) => {
+  // Return an empty object if there's no _iframe
+  if (!_iframe) { return {}; }
+  
+  // If there's something at [0], then it's _probably_ a jQuery object.
+  let iframe = !!_iframe[0]
+    ? _iframe[0]
+    : _iframe;
+  
+  return !!iframe.contentWindow
+    ? iframe.contentWindow
+    : iframe.contentDocument.defaultView;
+}
+
 export default {
   get: get,
+  settlePromises: settlePromises,
   createEmbedUrl: createEmbedUrl,
-  setupIframe: setupIframe
+  setupIframe: setupIframe,
+  iframeContentWindow: iframeContentWindow
 }
