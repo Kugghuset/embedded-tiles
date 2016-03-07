@@ -29,12 +29,22 @@ export const setup = () => {
           height: _height,
           width: _width
         });
-        
+             
         // Get the iframeContent window from the tile.
         let _iframe = utils.iframeContentWindow(tile);
         
         // Post the message
         _iframe.postMessage(_message, '*');
+        
+        /**
+         * Use something like this to emulate updates
+         */
+        // setInterval(() => {
+        //   // Post the message
+        //   _iframe.postMessage(_message, '*');
+        //   console.log('Sending message');
+        // }, 5000);
+        
       });
       
       return tile;
