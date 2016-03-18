@@ -14,7 +14,20 @@ export const get = (req, res) => {
   .catch((err) => utils.handleError(res, err));
 }
 
+/**
+ * Route: PUT /api/tiles'
+ */
+export const showMatches = (req, res) => {
+  // Assign _body
+  let _body = req.body || {};
+
+  powerBi.getTiles(_body.token, _body.dashboard, _body.tiles)
+  .then((tiles) => res.status(200).json(tiles))
+  .catch((err) => utils.handleError(res, err));
+}
+
 export default {
-  get: get
+  get: get,
+  showMatches: showMatches,
 }
 
