@@ -1,6 +1,8 @@
 'use strict'
 
 var chalk = require('chalk');
+var fs = require('fs');
+var path = require('path');
 
 var config = require('./.server/config').default;
 var device = require('./.server/services/device').default;
@@ -76,6 +78,30 @@ if (options.hasOwnProperty('generate-token')) {
     console.log('\n');
     console.log(chalk.bgMagenta(_token));
     console.log('\n');
+  }
+
+}
+
+if (options.hasOwnProperty('secret')) {
+  console.log(chalk.green('Generating new secret:'));
+  var _secret = auth.uuid(64);
+  console.log(chalk.bgMagenta(_secret));
+
+  if (options.hasOwnProperty('save')) {
+    var _envPath  = path.resolve('.env');
+    if (fs.existsSync(_envPath)) {
+      var _fileContent = fs.readFileSync(_envPath, 'utf8');
+
+      _fileContent = /APP_SECRET=/.test(_fileContent)
+        ? _fileContent.replace(/(APP_SECRET=).*/, '$1' + _secret)
+        : _fileContent + '\nAPP_SECRET=' + _secret;
+
+      fs.writeFileSync(_envPath, _fileContent);
+      console.log(chalk.green('Secret saved to .env file.'));
+    }
+
+
+
   }
 
 }
