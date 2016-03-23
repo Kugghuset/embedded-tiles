@@ -15,10 +15,10 @@ var p_json = require('./package.json');
 gulp.task('serve', function () {
   // Restarts node if it's running
   if (node) { node.kill(); }
-  
+
   // Run the node command on the main (given in package.json) or app.js
   node = spawn('node', [(p_json.main || 'server.js')], { stdio: 'inherit' });
-  
+
   // An error occured
   node.on('close', function (code) {
     if (code === 8) {
@@ -30,9 +30,9 @@ gulp.task('serve', function () {
 // Runs the front end building tool chain
 gulp.task('build:frontend', function () {
   var c = shell.exec('npm run build:frontend').output;
-  
+
   console.log(chalk.green(c));
-  
+
   livereload.reload();
 });
 
@@ -46,5 +46,8 @@ gulp.task('watch', function () {
   gulp.watch(['./server/**', './server.js'], ['build:server', 'serve']);
   gulp.watch(['public/**', '!public/dist/**'], ['build:frontend']);
 });
+
+// Create a basis build task
+gulp.task('build', ['build:server', 'build:frontend']);
 
 gulp.task('default', ['build:server', 'build:frontend', 'watch', 'serve'])
