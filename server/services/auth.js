@@ -1,9 +1,11 @@
 'use strict'
 
 import _ from 'lodash';
-import config from '../config';
 import compose from 'composable-middleware';
 import jwt from 'jsonwebtoken';
+
+import config from '../config';
+import device from './device';
 
 /**
  * Finds the token from either query params, headers or cookies
@@ -82,16 +84,17 @@ export const isAuthenticated = (req, res, next) => {
     // Get the decoded data
     let _decoded = decodeToken(_token);
 
+    // Get the device _id
+    let _deviceId = !!_decoded ? _decoded.deviceId : _decoded;
+
+    // Get the device
+    let _device = !!_deviceId ? device.find({_id: _deviceId}, false) : undefined;
+
     // Set the device data
-    req.device = {
-      token: _token,
-      device: !!_decoded ?
-        _decoded.device
-        : _decoded,
-    }
+    req.device = _.assign({}, _device, {token: _token});
 
     // If there is no registered device, return a 401 unauthorized
-    if (!req.device.device) {
+    if (!_deviceId || !req.device._id) {
       return res.status(401).send('Unauthorized');
     }
 
@@ -100,8 +103,23 @@ export const isAuthenticated = (req, res, next) => {
   });
 }
 
+/**
+ * Generates a uuid and returns it.
+ *
+ * @param {Number} uuidLength The lenght of the uuid, defaults sto 32
+ * @return {String}
+ */
+export const uuid = (uuidLength = 32) => {
+  // Generate a-z0-9
+  let _chars = _.times(26, (i) => String.fromCharCode(i + 97)).concat(_.times(10));
+
+  // Generate the actual uuid
+  return _.times(uuidLength, () => _chars[Math.floor(Math.random() * _chars.length)]).join('');
+}
+
 export default {
   signToken: signToken,
   decodeToken: decodeToken,
   isAuthenticated: isAuthenticated,
+  uuid: uuid,
 }
