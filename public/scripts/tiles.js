@@ -1,6 +1,9 @@
 'use strict'
 
+import { isError } from 'lodash';
+
 import utils from './utils';
+import auth from './auth';
 
 // Define height and with
 let _height = 400;
@@ -22,8 +25,16 @@ export const setup = () => {
       ],
   };
 
+  // Get both tiles and token
   utils.settlePromises([utils.put('/api/tiles', tilesData), utils.get('/api/token')])
   .then((_data) => {
+
+    // Handle errors
+    if (_.some(_data, isError)) {
+      // Return early
+      return console.log(_data);
+    }
+
     let [_tiles, _tokenData] = _data;
 
     let tiles = _tiles.map((tile) => {

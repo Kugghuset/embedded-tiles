@@ -2,19 +2,35 @@
 
 import Promise from 'bluebird';
 import { ajax } from 'jquery';
-import { isNumber, isString, isFunction } from 'lodash';
+import { isNumber, isString, isFunction, isUndefined, assign } from 'lodash';
+import { getToken } from './auth';
 
 /**
- * Makes a get request to *url* and returns a promise of the response.
- *
- * @param {String} url Url to make the GET request to
+ * @param {String} method The request verb, case insensitive
+ * @param {String} url The url to where the request will be made
+ * @param {Object} data The data which will be sent as the body of the request, not required
  * @param {Object} options Optional options object
  * @return {Promise} -> {Any}
  */
-export const get = (url, options) => new Promise((resolve, reject) => {
+const _request = (method, url, data, options) => new Promise((resolve, reject) => {
+  // Ensure uppercase
+  let _method = isString(method)
+    ? method.toUpperCase()
+    : 'GET';
+
+  // Assign the default options
+  let _options = assign({
+  }, options, {
+    headers: assign({}, {
+      authorization: 'Bearer ' + getToken(),
+    }, (options || {}).headers)
+  });
+
   ajax({
     url: url,
-    type: 'GET',
+    type: _method,
+    headers: _options.headers,
+    data: data,
     success: resolve,
     error: (err) => {
       reject(new Error(
@@ -27,6 +43,19 @@ export const get = (url, options) => new Promise((resolve, reject) => {
 });
 
 /**
+ * Makes a get request to *url* and returns a promise of the response.
+ *
+ * @param {String} url Url to make the GET request to
+ * @param {Object} options Optional options object
+ * @return {Promise} -> {Any}
+ */
+export const get = (url, options) => new Promise((resolve, reject) => {
+  _request('GET', url, {}, options)
+  .then(resolve)
+  ['catch'](reject);
+});
+
+/**
  * Makes a PUT request to *url* and returns a promise of the response.
  *
  * @param {String} url Url to make the PUT request to
@@ -35,20 +64,23 @@ export const get = (url, options) => new Promise((resolve, reject) => {
  * @return {Promise} -> {Any}
  */
 export const put = (url, data, options) => new Promise((resolve, reject) => {
-  ajax({
-    url: url,
-    type: 'PUT',
-    dataType: 'json',
-    data: data || {},
-    success: resolve,
-    error: (err) => {
-      reject(new Error(
-        !!err.responseBody
-          ? err.responseBody
-          : err.responseText
-        ));
-    },
-  });
+  _request('PUT', url, data, options)
+  .then(resolve)
+  ['catch'](reject);
+});
+
+/**
+ * Makes a POST request to *url* and returns a promise of the response.
+ *
+ * @param {String} url Url to make the POST request to
+ * @param {Object} data The data to POST
+ * @param {Object} options Optional options object
+ * @return {Promise} -> {Any}
+ */
+export const post = (url, data, options) => new Promise((resolve, reject) => {
+  _request('POST', url, data, options)
+  .then(resolve)
+  ['catch'](reject);
 });
 
 /**
@@ -157,12 +189,38 @@ export const getWidth = (parent, width) => {
   return -1;
 }
 
+/**
+ * Gets the DOM element to use with SpreadJS from either a DOM element, jQuery object or queryString.
+ *
+ * @param {Element|Object|String} element Either the actual element, a jQuery object or the queryString for the element
+ * @return {Element}
+ */
+export const getElement = (element) => {
+    let _element;
+
+    if (_.isString(element)) {
+        // If it's a string, get the element using the querySelector with the string *element*.
+        _element = document.querySelector(element);
+    } else if (!!element && !!element[0]) {
+        // Assume *element* is a jQuery object.
+        _element = element[0];
+    } else {
+        // The *element* is most probably an actual DOM element.
+        _element = element;
+    }
+
+    return _element;
+}
+
+
 export default {
   get: get,
   put: put,
+  post: post,
   settlePromises: settlePromises,
   createEmbedUrl: createEmbedUrl,
   setupIframe: setupIframe,
   iframeContentWindow: iframeContentWindow,
   getWidth: getWidth,
+  getElement: getElement,
 }
