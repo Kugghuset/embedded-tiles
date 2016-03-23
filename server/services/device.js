@@ -96,7 +96,6 @@ export const find = (options, asArray = true, returnError) => {
         ? items
         : _.reduce(items, (obj, item) => { return _.assign({}, obj, _.zipObject([item._id], [item])); });
     })
-    .tap((r) => console.log(r))
     .value();
 }
 
