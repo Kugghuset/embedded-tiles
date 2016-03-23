@@ -67,6 +67,10 @@ if (options.hasOwnProperty('generate-token')) {
   } else {
     console.log(chalk.green('Generating a new token for device: {device}'.replace('{device}', _id)));
 
+    /**
+     * TODO: Handle non existant _ids
+     */
+
     var _token = auth.signToken({deviceId: _id});
     console.log(chalk.green('Token generated:'));
     console.log('\n');
