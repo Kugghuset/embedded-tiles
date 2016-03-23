@@ -16,17 +16,20 @@ let _mount;
  */
 export const setup = () => {
 
+  // Set _mount to the mount point
   _mount = $('#mount-point');
 
-  let tilesData = {
+  // TODO: Move this to dashboard later on
+  let _tilesData = {
       tiles: [
-        { title: 'Samtalstid och väntetid i minuter', width: utils.getWidth(_mount, '100%') },
-        { title: 'Antal samtal', width: utils.getWidth(_mount, '50%') },
+        { title: 'Antal samtal', width: utils.getPixels(_mount, '50%', 'width'), height: utils.getPixels(_mount, '50%', 'height') },
+        { title: '% Väntetid under 60 sekunder', width: utils.getPixels(_mount, '50%', 'width'), height: utils.getPixels(_mount, '50%', 'height') },
+        { title: 'Samtalstid och väntetid i minuter', width: utils.getPixels(_mount, '100%', 'width'), height: utils.getPixels(_mount, '50%', 'height') },
       ],
   };
 
   // Get both tiles and token
-  utils.settlePromises([utils.put('/api/tiles', tilesData), utils.get('/api/token')])
+  utils.settlePromises([utils.put('/api/tiles', _tilesData), utils.get('/api/token')])
   .then((_data) => {
 
     // Handle errors

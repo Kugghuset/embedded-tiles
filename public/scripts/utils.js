@@ -145,23 +145,24 @@ export const iframeContentWindow = (_iframe) => {
 }
 
 /**
- * Returns the relative width to parent (currently only percentage) or actual width if (if px based).
+ * Returns the relative size to parent (currently only percentage) or actual size if (if px based).
  *
- * @param {Object} parent The parent object to calculate relative width from
- * @param {String|Number} width The width to do calculations on
+ * @param {Object} parent The parent object to calculate relative size from
+ * @param {String|Number} size The size to do calculations on
+ * @parmam {String} type The type of size to get, should be either 'width' or 'height'
  * @return {Number} ex. 12
  */
-export const getWidth = (parent, width) => {
+export const getPixels = (parent, size, type) => {
   // Assume a plain number is pixels
-  if (isNumber(width)) { return width; }
+  if (isNumber(size)) { return size; }
 
   // If width is incorrect, -1 is returned
-  if (!isString(width)) { return -1; }
+  if (!isString(size)) { return -1; }
 
   // Handle pixels
-  if (/px$/i.test(width.replace(/[^a-ö]/gi, ''))) {
+  if (/px$/i.test(size.replace(/[^a-ö]/gi, ''))) {
     // First get the match object
-    let _nums = parseFloat(width);
+    let _nums = parseFloat(size);
 
     // If _numMatch isn't null, return the 0th item,
     // otherwise return -1
@@ -171,19 +172,29 @@ export const getWidth = (parent, width) => {
   }
 
   // Handle percentages
-  if (/%/.test(width)) {
+  if (/%/.test(size)) {
     // First get the match object
-    let _percentage = parseFloat(width);
+    let _percentage = parseFloat(size);
 
     // If NaN, return -1
     if (isNaN(_percentage)) { return -1; }
 
-    // Get the inner widht
-    let innerWidth = isFunction($(parent).innerWidth)
-      ? $(parent).innerWidth()
-      : $(document).innerWidth();
+    let _innerSize;
 
-    return ((_percentage / 100) * innerWidth);
+    if ((type || '').toLowerCase() === 'width') {
+      // Get the inner width
+      _innerSize = isFunction($(parent).innerWidth)
+        ? $(parent).innerWidth()
+        : $(document).innerWidth()
+    } else {
+      // Get the inner height
+      _innerSize = isFunction($(parent).innerHeight)
+        ? $(parent).innerHeight()
+        : $(document).innerHeight()
+    }
+
+    // Calculate the Height
+    return ((_percentage / 100) * _innerSize);
   }
 
   return -1;
@@ -221,6 +232,6 @@ export default {
   createEmbedUrl: createEmbedUrl,
   setupIframe: setupIframe,
   iframeContentWindow: iframeContentWindow,
-  getWidth: getWidth,
+  getPixels: getPixels,
   getElement: getElement,
 }

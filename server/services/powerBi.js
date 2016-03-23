@@ -113,7 +113,6 @@ export const getTiles = (token, _dashboard, __tiles) => new Promise((resolve, re
   // First list all dashboards
   listDashboards(token)
   .then((dashboards) => {
-
     // Find the dashboardId of the dashboard matching *_dashboard* (either by id or displayName).
     let _dashboardId = (_.find(dashboards, (dashboard) => {
       return dashboard.id === _dashboard || dashboard.displayName === _dashboard;
@@ -133,16 +132,16 @@ export const getTiles = (token, _dashboard, __tiles) => new Promise((resolve, re
     if (!__tiles || !_tiles.length) { _tiles = undefined; }
 
     resolve(
-      _.chain(tiles)
+      _.chain(_tiles)
       // If _tiles is undefined, filter out none, otherwise filter out all non-matching tiles
         .filter((tile) => {
-          return!!_tiles
-            ? _tileExists(_tiles, tile)
+          return !!_tiles
+            ? _tileExists(tiles, tile)
             : true;
         })
       .map((tile) => {
-        let _tile = _tileExists(_tiles, tile);
-        return _.assign({}, _tile, { title: tile.title, embedUrl: tile.embedUrl });
+        let _tile = _tileExists(tiles, tile);
+        return _.assign({}, tile, { title: _tile.title, embedUrl: _tile.embedUrl });
       })
       .value()
     );
