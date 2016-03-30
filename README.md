@@ -7,7 +7,7 @@ _Note: current version is not a finished system. Because of this, the names of t
 ## Quick guide
 
 1. Make sure [Node.js and NPM](https://nodejs.org/en/) and [Git](https://git-scm.com/downloads) are installed
-2. Clone the repo using HTTPS or SSH: `git clone https://github.com/Kugghuset/klarify-ds-fortnox.git`
+2. Clone the repo using HTTPS or SSH: `git clone https://github.com/Kugghuset/embedded-tiles.git`
 3. Make sure global NPM packages are installes: `npm install -g babel-cli webpack gulp forever`
 4. From project root, install local NPM packages: `npm install`
 5. Set up the _.env_ file with Azure credentials (and possibly edit `public/scripts/tiles.js` to use your own tile names).
@@ -38,10 +38,10 @@ First clone the repo:
 
 ```bash
 # HTTPS
-git clone https://github.com/Kugghuset/klarify-ds-fortnox.git
+git clone https://github.com/Kugghuset/embedded-tiles.git
 
 # SSH
-git clone git@github.com:Kugghuset/klarify-ds-fortnox.git
+git clone git@github.com:Kugghuset/embedded-tiles.git
 
 # cd into the repository folder
 cd embedded-tiles
