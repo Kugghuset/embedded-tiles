@@ -49,8 +49,6 @@ if (options.hasOwnProperty('list')) {
   print(device.list());
 }
 
-print(options)
-
 // Generate a token
 if (options.hasOwnProperty('generate-token')) {
   // Get the _id from either the newly created _device or from an _id or id option
@@ -61,11 +59,11 @@ if (options.hasOwnProperty('generate-token')) {
   if (!_id) {
     console.log(chalk.red('Cannot generate a token, no _id provided.'));
     console.log(chalk.yellow('To generate tokens, run one of the following commands:'));
-    console.log(chalk.bgWhite(chalk.black('node manage_devices.js --generate-token --_id <_id here>')));
+    console.log(chalk.bgWhite(chalk.black('node manage.js --generate-token --_id <_id here>')));
     console.log('or');
-    console.log(chalk.bgWhite(chalk.black('node manage_devices.js --generate-token --id <_id here>')));
+    console.log(chalk.bgWhite(chalk.black('node manage.js --generate-token --id <_id here>')));
     console.log('or');
-    console.log(chalk.bgWhite(chalk.black('node manage_devices.js --generate-token --create')));
+    console.log(chalk.bgWhite(chalk.black('node manage.js --generate-token --create')));
   } else {
     console.log(chalk.green('Generating a new token for device: {device}'.replace('{device}', _id)));
 
@@ -99,15 +97,11 @@ if (options.hasOwnProperty('secret')) {
       fs.writeFileSync(_envPath, _fileContent);
       console.log(chalk.green('Secret saved to .env file.'));
     }
-
-
-
   }
-
 }
 
 /**
- * @param {Arr|Objet} val
+ * @param {Array|Object} val
  */
 function print(val) {
   console.log(JSON.stringify(val, null, 4));
