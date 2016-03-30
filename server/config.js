@@ -1,7 +1,7 @@
 'use strict'
 
-var env = require('node-env-file');
-var path = require('path');
+import env from 'node-env-file';
+import path from 'path';
 env(path.resolve(__dirname, '../.env'));
 
 export default {
