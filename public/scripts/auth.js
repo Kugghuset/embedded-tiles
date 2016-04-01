@@ -2,6 +2,7 @@
 
 import utils from './utils';
 import moment from 'moment';
+import Promise from 'bluebird';
 
 /**
  * The id for the update Azure timeout loop.
