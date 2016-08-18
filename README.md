@@ -8,7 +8,7 @@ _Note: current version is not a finished system. Because of this, the names of t
 
 1. Make sure [Node.js and NPM](https://nodejs.org/en/) and [Git](https://git-scm.com/downloads) are installed
 2. Clone the repo using HTTPS or SSH: `git clone https://github.com/Kugghuset/embedded-tiles.git`
-3. Make sure global NPM packages are installes: `npm install -g babel-cli webpack gulp forever`
+3. Make sure global NPM packages are installes: `npm install -g babel-cli webpack gulp pm2`
 4. From project root, install local NPM packages: `npm install`
 5. Set up the _.env_ file with Azure credentials (and possibly edit `public/scripts/tiles.js` to use your own tile names).
 6. Build the project: `npm run build`
@@ -18,6 +18,8 @@ _Note: current version is not a finished system. Because of this, the names of t
 10. Navigate to the following URL using a web browser: `http://localhost:3000?token=<token_here>`
 
 _NOTE: The URL may change depending on whether you modify the PORT and/or IP lines in the .env file._
+
+---
 
 ## Getting started
 
@@ -32,7 +34,7 @@ Before the installing the necessary NPM packages, Node.js (and NPM) and Git must
 - [Node.js and NPM](https://nodejs.org/en/)
 - [Git](https://git-scm.com/downloads)
 
-When both are installed, open up a terminal window (E.G. cmd.exe on Windows), and run the following commands (if you don't already have these installed, that is). For deployment, [forever](https://github.com/foreverjs/forever) may also be of interest, as it lets Node apps to be run as daemons in the background.
+When both are installed, open up a terminal window (E.G. cmd.exe on Windows), and run the following commands (if you don't already have these installed, that is). For deployment, [pm2](https://github.com/Unitech/pm2) may also be of interest, as it lets Node apps to be run as daemons in the background and is excellent for running Node apps in production (whilst running a reverse proxy).
 
 First clone the repo:
 
@@ -47,10 +49,10 @@ git clone git@github.com:Kugghuset/embedded-tiles.git
 cd embedded-tiles
 ```
 
-Then make sure `babel`, `webpack`, `gulp`, and `forever` are installed. `forever` is not required though.
+Then make sure `babel`, `webpack`, `gulp`, and `pm2` are installed. `pm2` is not required though.
 
 ```bash
-npm install -g babel-cli webpack gulp forever
+npm install -g babel-cli webpack gulp pm2
 ```
 
 After that from the project root, all local dependencies must be installed:
@@ -80,7 +82,7 @@ npm run build:server
 npm run build:frontend
 ```
 
-In later iteration, a build command for packaging the app upp for deployment will be added as well.
+In later iteration, a build command for packaging the app up for deployment will be added as well.
 
 ### The .env file
 
